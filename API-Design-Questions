@@ -1,0 +1,70 @@
+Question 1: Design a REST API for a Fleet Vehicle Sensor Data Ingestor
+
+Core Requirements:
+Design a system to ingest and store real-time sensor data from a fleet of delivery vehicles. Each vehicle sends a packet of data every 30 seconds.
+Ingest Data Endpoint: Create an API endpoint (POST /ingest) that accepts telemetry data from vehicles.
+
+Inputs: The request should include vehicleId, timestamp, latitude, longitude, currentSpeed, engineRpm, fuelLevel.
+
+Business Logic:
+The system must validate that all required fields are present and in the correct format.
+The data must be stored efficiently for later retrieval and analysis (e.g., generating reports on fuel consumption, vehicle usage, route history).
+The API should be highly available to handle bursts of data from thousands of vehicles.
+
+Your Tasks:
+1. API & Data Design:
+Define the JSON request body for the POST /ingest endpoint.
+Briefly describe the necessary database schema(s) for storing this time-series data. Consider both relational (SQL) and non-relational (NoSQL) options. Justify your choice.
+2. Implementation Logic:
+Outline the steps your Spring Boot service method would take to process and store the incoming data.
+How would you structure your database queries or operations for efficient writes?
+3. Critical Thinking (The Most Important Part):
+The volume of data is immense (e.g., 1000 vehicles * 2 packets/min * 60 min * 24 hrs = 2.88 million records/day). How would you design your database and storage strategy to handle this scale and allow for efficient querying of a single vehicle's historical data over a month?
+How would you ensure data integrity if the same sensor packet is accidentally sent twice (e.g., due to network retries)?
+
+Question 2: Design a REST API for a Banking Fund Transfer Service
+
+Core Requirements:
+Design a core banking API to handle transfers between customer accounts.
+Transfer Funds Endpoint: Create an API endpoint (POST /transfers) that initiates a transfer.
+Inputs: The request should include fromAccountId, toAccountId, amount, currency.
+Business Logic:
+
+The system must validate that the fromAccountId exists and has sufficient funds for the transfer.
+The transfer must be atomic: both the debit from the source account and the credit to the target account must succeed, or both must fail (e.g., in case of a system error in between the two operations).
+The transaction must be recorded in an audit log.
+
+Your Tasks:
+1. API & Data Design:
+Define the JSON request and response bodies for the POST /transfers endpoint.
+Briefly describe the necessary database entities/tables (e.g., Account, Transaction).
+2. Implementation Logic:
+Outline the steps your Spring Boot @Service method would take to validate and execute the transfer.
+How would you structure the database operations to ensure the account balances are always consistent?
+
+3. Critical Thinking (The Most Important Part):
+Describe in detail how you would achieve the atomicity requirement (the "all-or-nothing" guarantee). Would you use database transactions, and if so, how would you manage the transaction boundaries in your service? Are there any pitfalls?
+Imagine two simultaneous transfers are being processed for the same account. How would you prevent a race condition that could lead to an incorrect final balance (e.g., an overdraft)? Describe the specific locking strategy you would use (e.g., optimistic vs. pessimistic locking, SELECT FOR UPDATE).
+
+Question 3: Design a REST API for a Meeting Room Booking System
+
+Core Requirements:
+Design a system for employees to book meeting rooms in an office.
+Book Room Endpoint: Create an API endpoint (POST /bookings) that allows an employee to book a room.
+Inputs: The request should include roomId, organizerEmail, startTime (Timestamp), endTime (Timestamp).
+Business Logic:
+
+The system must check if the specified room is available for the entire requested time slot.
+A room cannot be double-booked. An employee cannot have two overlapping meetings.
+If the room is available and the employee is free, the booking is saved.
+
+Your Tasks:
+1. API & Data Design:
+Define the JSON request and response bodies for the POST /bookings endpoint.
+Briefly describe the necessary JPA/SQL entities/tables for a Booking, Room, and Employee.
+2. Implementation Logic:
+Outline the steps your service method would take to validate and create the booking. Write pseudocode for the database query that checks for room availability and employee conflict.
+3. Critical Thinking (The Most Important Part):
+This problem has two unique constraints: room availability and employee availability. How does this change your approach compared to the original dealership question?
+How would you handle the race condition for two employees trying to book the last available room at the same time? Would your solution be different for preventing an employee from double-booking themselves? Justify your answer.
+Discuss the trade-offs of implementing these constraints at the application level versus the database level (e.g., using unique indexes or constraints).
